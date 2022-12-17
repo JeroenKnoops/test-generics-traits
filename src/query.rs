@@ -15,17 +15,6 @@ impl Describe for Tag {
     }
 }
 
-struct User {
-    pub name: String,
-    pub age: usize,
-}
-
-impl Describe for User {
-    fn desc(&self) -> String {
-        format!("Human: {}", self.name.clone())
-    }
-}
-
 struct Post {
     pub title: String,
 }
@@ -52,16 +41,6 @@ mod tests {
         };
 
         assert_eq!(tag.desc(), "nerd");
-    }
-
-    #[test]
-    fn desc_user() {
-        let user = User {
-            name: String::from("jeroenknoops"),
-            age: 47,
-        };
-
-        assert_eq!(user.desc(), "Human: jeroenknoops");
     }
 
     #[test]
