@@ -8,16 +8,28 @@ pub fn desc<T: Describe>(model: &T) -> String {
     model.desc()
 }
 
+pub trait Resource {
+    fn query_uri(&self) -> String {
+        String::from("https://{}.stackenterprise.co/api/2.3/{}?page={}&pagesize={}&order=desc&sort={}&filter={}&key={}")
+    }
+
+    // Default no filter
+    fn query_filter(&self) -> String {
+        String::from("")
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn desc_generic_on_default() {
+    fn resource_defaults() {
         struct TestStruct {}
-        impl Describe for TestStruct {}
+        impl Resource for TestStruct {}
 
-        assert_eq!(desc(&TestStruct {}), "...");
+        assert_eq!(&TestStruct {}.query_filter(), "");
+        assert_eq!(&TestStruct {}.query_uri(), "https://{}.stackenterprise.co/api/2.3/{}?page={}&pagesize={}&order=desc&sort={}&filter={}&key={}");
     }
 
     #[test]
