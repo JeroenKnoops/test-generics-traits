@@ -1,31 +1,21 @@
 mod query;
+mod tag;
 mod user;
 
-use crate::query::Describe;
-
 fn main() {
-    println!("{}, world!", query::hello());
-    println!(
-        "test: {}",
-        user::User {
-            name: String::from("Jeroen Knoops"),
-            age: 47
-        }
-        .desc()
-    );
+    println!("hello world!");
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::query::Describe;
 
     #[test]
-    fn desc_user() {
-        let user = user::User {
-            name: String::from("jeroenknoops"),
-            age: 47,
-        };
+    fn desc_generic() {
+        struct TestStruct {}
+        impl Describe for TestStruct {}
 
-        assert_eq!(user.desc(), "Human: jeroenknoops");
+        assert_eq!(query::desc(&TestStruct {}), "...");
     }
 }

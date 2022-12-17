@@ -4,27 +4,6 @@ pub trait Describe {
     }
 }
 
-struct Tag {
-    pub name: String,
-    pub count: usize,
-}
-
-impl Describe for Tag {
-    fn desc(&self) -> String {
-        self.name.clone()
-    }
-}
-
-struct Post {
-    pub title: String,
-}
-
-impl Describe for Post {}
-
-pub fn hello() -> String {
-    String::from("hello")
-}
-
 pub fn desc<T: Describe>(model: &T) -> String {
     model.desc()
 }
@@ -34,36 +13,30 @@ mod tests {
     use super::*;
 
     #[test]
-    fn desc_tag() {
-        let tag = Tag {
-            name: String::from("nerd"),
-            count: 303,
-        };
+    fn desc_generic_on_default() {
+        struct TestStruct {}
+        impl Describe for TestStruct {}
 
-        assert_eq!(tag.desc(), "nerd");
+        assert_eq!(desc(&TestStruct {}), "...");
     }
 
     #[test]
-    fn desc_post() {
-        let post = Post {
-            title: String::from("rust is awesome"),
-        };
+    fn desc_generic_on_struct() {
+        struct TestStruct {
+            name: String,
+        }
 
-        assert_eq!(post.desc(), "...");
-    }
+        impl Describe for TestStruct {
+            fn desc(&self) -> String {
+                format!("Hi, my name is {}", self.name)
+            }
+        }
 
-    #[test]
-    fn desc_generic() {
-        let post = Post {
-            title: String::from("rust is awesome"),
-        };
-
-        let tag = Tag {
-            name: String::from("nerd"),
-            count: 303,
-        };
-
-        assert_eq!(desc(&post), "...");
-        assert_eq!(desc(&tag), "nerd");
+        assert_eq!(
+            desc(&TestStruct {
+                name: String::from("Slim")
+            }),
+            "Hi, my name is Slim"
+        );
     }
 }
