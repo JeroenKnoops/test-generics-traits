@@ -1,5 +1,6 @@
 use super::query::Describe;
 
+#[derive(Debug, Default)]
 pub struct User {
     pub account_id: Option<i32>, // removed users do not have an account_id
     pub display_name: String,

@@ -1,3 +1,39 @@
+#[derive(Debug)]
+pub struct Query<T> {
+    pub config: String,
+    pub elements: Vec<T>,
+}
+
+#[derive(Default)]
+pub struct QueryBuilder<T>
+where
+    T: Default,
+{
+    pub config: Option<String>,
+    pub elements: Vec<T>,
+}
+
+impl<T: std::default::Default> QueryBuilder<T> {
+    pub fn new() -> Self {
+        QueryBuilder::<T>::default()
+    }
+
+    pub fn config(&mut self, config: impl Into<String>) -> &mut Self {
+        self.config = Some(config.into());
+        self
+    }
+
+    pub fn build(&self) -> Result<Query<T>, &'static str> {
+        let Some(config) = self.config.as_ref() else {
+            return Err("No config");
+        };
+        Ok(Query {
+            config: config.to_string(),
+            elements: vec![T::default()],
+        })
+    }
+}
+
 pub trait Describe {
     fn desc(&self) -> String {
         String::from("...")
