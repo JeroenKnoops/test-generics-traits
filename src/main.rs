@@ -1,15 +1,23 @@
+mod config;
 mod query;
 mod tag;
 mod user;
 
+use config::Config;
 use query::{Query, QueryBuilder};
+use tag::Tag;
 use user::User;
 
 fn main() {
     println!("hello world!");
-    let config = String::from("configuration");
+
+    let config = Config::new("user", "filtertje");
     let query = QueryBuilder::<User>::new().config(config).build();
-    println!("Query: {:?}", query);
+    println!("Query: {query:#?}");
+
+    let config = Config::new("tag", "tags");
+    let query = QueryBuilder::<Tag>::new().config(config).build();
+    println!("Query: {query:#?}");
 }
 
 #[cfg(test)]

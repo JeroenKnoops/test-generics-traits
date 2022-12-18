@@ -1,6 +1,8 @@
+use crate::config::Config;
+
 #[derive(Debug)]
 pub struct Query<T> {
-    pub config: String,
+    pub config: Config,
     pub elements: Vec<T>,
 }
 
@@ -9,8 +11,8 @@ pub struct QueryBuilder<T>
 where
     T: Default,
 {
-    pub config: Option<String>,
-    pub elements: Vec<T>,
+    config: Option<Config>,
+    elements: Vec<T>,
 }
 
 impl<T: std::default::Default> QueryBuilder<T> {
@@ -18,17 +20,18 @@ impl<T: std::default::Default> QueryBuilder<T> {
         QueryBuilder::<T>::default()
     }
 
-    pub fn config(&mut self, config: impl Into<String>) -> &mut Self {
-        self.config = Some(config.into());
+    pub fn config(&mut self, config: Config) -> &mut Self {
+        self.config = Some(config);
         self
     }
 
     pub fn build(&self) -> Result<Query<T>, &'static str> {
-        let Some(config) = self.config.as_ref() else {
+        let Some(config) = self.config.clone() else {
             return Err("No config");
         };
+
         Ok(Query {
-            config: config.to_string(),
+            config,
             elements: vec![T::default()],
         })
     }
